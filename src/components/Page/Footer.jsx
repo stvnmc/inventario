@@ -4,7 +4,10 @@ function Footer() {
       <div className="main-cont">
         <div className="footer-info">
           <div className="cont-icon">
-            <img src="/Rosso_di_Roma.ico" alt="Logo Rosso Di Roma" />
+            <img
+              src={`${import.meta.env.BASE_URL}Rosso_di_Roma.ico`}
+              alt="Logo Rosso Di Roma"
+            />
           </div>
           <div className="footer-cont-info">
             <div>
@@ -18,7 +21,7 @@ function Footer() {
             </div>
             <div>
               <div className="linea"></div>
-              <h2>Acerca De Rosso Di Roma</h2>
+              <h2>Acerca De Rosso Di Roma</h2> 
               <p>Ejemplo</p>
               <p>Ejemplo</p>
               <p>Ejemplo</p>

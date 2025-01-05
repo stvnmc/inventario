@@ -102,7 +102,10 @@ function Menu() {
       {/* IMG */}
       <div className="cont-img">
         {animate ? (
-          <img src={`/img/${menu[indexImg].img}.png`} alt="Menu item" />
+          <img
+            src={`${import.meta.env.BASE_URL}img/${menu[indexImg].img}.png`}
+            alt="Menu item"
+          />
         ) : (
           ""
         )}

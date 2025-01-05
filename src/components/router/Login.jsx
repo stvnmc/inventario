@@ -32,7 +32,9 @@ function Login() {
       <div className="login-container">
         <div className="img-cont">
           <img
-            src={`/img/${restaurant[currentImage].nombre}.png`}
+            src={`${import.meta.env.BASE_URL}img/${
+              restaurant[currentImage].nombre
+            }.png`}
             alt={restaurant[currentImage].nombre}
           />
         </div>

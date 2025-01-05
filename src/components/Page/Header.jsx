@@ -9,7 +9,7 @@ function Header() {
   const divRef = useRef(null);
 
   const chanceSetMore = () => {
-    setMore(false);
+    setMore(!more);
   };
 
   useEffect(() => {
@@ -50,7 +50,7 @@ function Header() {
           <div className="linea"></div>
           <div className="contet-login-register">
             <Link to="/Login">
-              <h2>Login</h2>
+              <h2 onClick={chanceSetMore}>Login</h2>
             </Link>
           </div>
         </div>
