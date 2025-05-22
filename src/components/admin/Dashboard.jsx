@@ -20,6 +20,13 @@ const Dashboard = () => {
         >
           <h1>Faltantes</h1>
         </div>
+
+        <div
+          className="dashboard-containers"
+          onClick={() => setSite("missing")}
+        >
+          <h1>reservas</h1>
+        </div>
       </div>
     );
   };

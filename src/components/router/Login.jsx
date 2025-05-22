@@ -24,7 +24,7 @@ function Login() {
   };
 
   const submit = () => {
-    navigate("/dashboard");
+    navigate("/inventario/dashboard");
   };
 
   return (

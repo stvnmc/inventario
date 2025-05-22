@@ -32,10 +32,10 @@ function Header() {
       </div>
 
       <ul>
-        <Link to="/Menu">
+        <Link to="/inventario/Menu">
           <li>Menu</li>
         </Link>
-        <Link to="/Reservas">
+        <Link to="/inventario/Reservas">
           <li>Reservas</li>
         </Link>
       </ul>
@@ -49,7 +49,7 @@ function Header() {
           </div>
           <div className="linea"></div>
           <div className="contet-login-register">
-            <Link to="/Login">
+            <Link to="/inventario/Login">
               <h2 onClick={chanceSetMore}>Login</h2>
             </Link>
           </div>
