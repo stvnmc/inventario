@@ -11,13 +11,13 @@ const Calendario = ({
   setAllInfoCalendar,
 }) => {
   const [infoCalendar, setInfoCalendar] = useState([]);
-  const [monthChance, setMonthChance] = useState(new Date().getMonth());
+  const [monthChance, setMonthChance] = useState(new Date().getMonth() + 1);
   const [yearChance, setYearChance] = useState(new Date().getFullYear());
   const [dayOfMonthChance, setDayOfMonthChance] = useState(
     new Date().getDate()
   );
 
-  const month = new Date().getMonth();
+  const month = new Date().getMonth() + 1;
   const dayOfMonth = new Date().getDate();
   const year = new Date().getFullYear();
 
@@ -84,7 +84,7 @@ const Calendario = ({
       <div className="date-form" onClick={chanceStateCalendar}>
         <FaCalendarAlt />
         <h2>
-          {monthChance + 1}/{dayOfMonthChance}/{yearChance}
+          {monthChance}/{dayOfMonthChance}/{yearChance}
         </h2>
       </div>
       {calendar ? (

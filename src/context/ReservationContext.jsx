@@ -1,6 +1,13 @@
 import { createContext, useContext, useState } from "react";
 import { db } from "../firebase/config";
-import { addDoc, collection } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+} from "firebase/firestore";
 
 export const ReservationContext = createContext();
 
@@ -29,25 +36,62 @@ export const ReservartionsProvider = ({ children }) => {
     mailClient: null,
   });
 
-  function dateOfReservation(type, date) {
-    if (type === "placeAndPeople") {
-      setPlaceAndPeople({
-        place: date.place,
-        people: date.people,
-        time: date.time,
-      });
+  async function dateOfReservation(date, allInfoCalendar) {
+    // setPlaceAndPeople({
+    //   place: date.place,
+    //   people: date.people,
+    //   time: date.time,
+    // });
 
-      return;
-    }
-    if (type === "personalInformation") {
-      setPersonalInformation({
-        nameClient: date.nameClient,
-        phoneClient: date.phoneClient,
-        mailClient: date.mailClient,
-      });
+    const collectionRef = collection(db, "reservationDate");
 
-      return;
+    console.log(allInfoCalendar.day);
+    console.log(allInfoCalendar.month);
+    console.log(allInfoCalendar.year);
+
+    try {
+      const newReservation = {
+        placeAndPeople: date,
+        createdAt: new Date(),
+      };
+
+      // const docRef = doc(collectionRef, newReservation);
+
+      // const getRef = await getDoc(docRef);
+
+      // console.log(getRef)
+
+      const id = `${allInfoCalendar.month}-${allInfoCalendar.year}`;
+      const docRef = doc(db, "reservationDate", id);
+      await setDoc(docRef, newReservation);
+      console.log("Documento creado con ID personalizado:", id);
+
+      // const reservations = querySnapshot.docs.map((doc) => {
+      //   console.log(doc.id, doc.data().placeAndPeople ); // mostrar en consola
+      //   return {
+      //     id: doc.id,
+      //     ...doc.data(), // devolver los datos
+      //   };
+      // });
+
+      // const docRef = await addDoc(collectionRef, newReservation);
+
+      // console.log("Reservas encontradas:", docRef);
+
+      return true;
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      return false;
     }
+  }
+
+  function personalInformationOfReservation(date) {
+    setPersonalInformation({
+      nameClient: date.nameClient,
+      phoneClient: date.phoneClient,
+      mailClient: date.mailClient,
+    });
+
     return;
   }
 
@@ -57,7 +101,6 @@ export const ReservartionsProvider = ({ children }) => {
     try {
       const newReservation = {
         personalInformation: personalInformation,
-        placeAndPeople: placeAndPeople,
         createdAt: new Date(),
       };
 
@@ -74,6 +117,7 @@ export const ReservartionsProvider = ({ children }) => {
   return (
     <ReservationContext.Provider
       value={{
+        personalInformationOfReservation,
         dateOfReservation,
         finalizeReservation,
         placeAndPeople,

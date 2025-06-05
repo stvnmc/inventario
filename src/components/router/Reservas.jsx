@@ -29,17 +29,27 @@ function Reservas() {
 
   const [nameOfStateForm, setNameOfStateForm] = useState(null);
   const [phoneOfStateForm, setPhoneOfStateForm] = useState(null);
+  const [mailOfStateForm, setMailOfStateForm] = useState(null);
 
   // contexts
 
   const {
-    dateOfReservation,
+    personalInformationOfReservation,
     finalizeReservation,
     placeAndPeople,
     personalInformation,
+    dateOfReservation,
   } = useReservations();
 
   // useEffect
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setError({ name: null, isValid: true, textError: "null" });
+    }, 5000);
+
+    return () => clearTimeout(timeoutId);
+  }, [error]);
 
   // statement
 
@@ -98,7 +108,6 @@ function Reservas() {
 
   const chanceStateCalendar = () => {
     setCalendar(!calendar);
-    console.log(allInfoCalendar);
   };
 
   // form funticion
@@ -109,13 +118,12 @@ function Reservas() {
     const people = e.target.people.value;
     const time = e.target.time.value;
 
-    const date = { people, time, place, calendar };
-    const type = "placeAndPeople";
+    const date = { people, time, place };
 
     //save reservation
-    dateOfReservation(type, date);
+    dateOfReservation(date, allInfoCalendar);
 
-    setSections("personalInformation");
+    // setSections("personalInformation");
   };
 
   const handleSubmitPersonalInfo = (event) => {
@@ -129,28 +137,26 @@ function Reservas() {
     }
 
     const nameClient = event.target.name.value.trim();
-    const phoneClient = event.target.phone.value.trim();
-    const mailClient = event.target.mail.value.trim() || "cliente sin correo";
+    const phoneClient = event.target.phone.value.replace(/\s+/g, "");
+    console.log(phoneClient);
+
+    const mailClient = event.target.mail.value.trim() || "sin correo";
 
     setNameOfStateForm(nameClient);
     setPhoneOfStateForm(phoneClient);
-
-    if (mailClient === "") {
-      mailClient === "sin correo";
-    }
 
     const date = { nameClient, phoneClient, mailClient };
     const type = "personalInformation";
 
     //save reservation
-    dateOfReservation(type, date);
+    personalInformationOfReservation(type, date);
 
     setSections("confirmInformation");
   };
 
   const validateForm = (event) => {
     const name = event.target.name.value.trim();
-    const phone = event.target.phone.value.trim();
+    const phone = event.target.phone.value.replace(/\s+/g, "");
     const mail = event.target.mail.value.trim();
 
     const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,}$/;
@@ -246,9 +252,12 @@ function Reservas() {
               <div className="cont-input-nombre-reserva-telefono">
                 <label>Telefono</label>
                 <input
+                  style={{
+                    MozAppearance: "textfield",
+                  }}
                   name="phone"
                   placeholder="Telefono"
-                  type="tel"
+                  type="num"
                   value={phoneOfStateForm}
                   onChange={(e) => setPhoneOfStateForm(e.target.value)}
                   required
@@ -258,16 +267,22 @@ function Reservas() {
               </div>
               <div className="cont-input-nombre-reserva-correo">
                 <label>Corre</label>
-                <input name="mail" placeholder="Correo" type="text"></input>
+                <input
+                  name="mail"
+                  placeholder="Correo"
+                  type="text"
+                  onChange={(e) => setMailOfStateForm(e.target.value)}
+                  value={mailOfStateForm}
+                ></input>
                 {/* error */}
                 <h2>{error.name === "mail" ? error.textError : null}</h2>
               </div>
             </div>
             <div className="cont-text-reserva-telefono-correo">
               <h3 className="cont-text-reserva-telefono-correo-first-h3">
-                Te haremos una llamada de confirmacion al numero de telefeno
+                Te haremos una llamada de confirmacion de reserva
               </h3>
-              <h3>Te haremos una confirmacion al numero de telfeno</h3>
+              <h3>Te estaremos mandando infomacion sobre nuestros eventos</h3>
             </div>
           </div>
           <div className="cont-button-next-form">
