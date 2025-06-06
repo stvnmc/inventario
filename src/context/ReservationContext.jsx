@@ -7,6 +7,7 @@ import {
   getDoc,
   getDocs,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 
 export const ReservationContext = createContext();
@@ -43,28 +44,43 @@ export const ReservartionsProvider = ({ children }) => {
     //   time: date.time,
     // });
 
-    const collectionRef = collection(db, "reservationDate");
+    // const collectionRef = collection(db, "reservationDate");
 
     console.log(allInfoCalendar.day);
     console.log(allInfoCalendar.month);
     console.log(allInfoCalendar.year);
 
     try {
-      const newReservation = {
-        placeAndPeople: date,
-        createdAt: new Date(),
-      };
+      // const newReservation = {
+      //   placeAndPeople: date,
+      //   createdAt: new Date(),
+      // };
+
+      // Documento por mes y año
+      const id = `${allInfoCalendar.month}-${allInfoCalendar.year}`;
+
+      // Referencia al documento principal
+      const docRef = doc(db, "reservationDate", id, date.time);
+
+      // Referencia a la subcolección "reservas" dentro de ese documento
+      const subColRef = collection(docRef, "reservas");
+
+      // Agregar una nueva reserva (no borra las anteriores)
+      const dsads = await addDoc(subColRef, date);
+
+      console.log(dsads);
+
+      // await updateDoc(collectionRef, {
+      //   campoNuevo: "actualizado o agregado",
+      // });
+
+      // const docRef = await addDoc(reservationsCollectionRef, newReservation);
+
+      // console.log("Reserva guardada con ID:", docRef.id);
+
+      // await setDoc(docRef, newReservation);
 
       // const docRef = doc(collectionRef, newReservation);
-
-      // const getRef = await getDoc(docRef);
-
-      // console.log(getRef)
-
-      const id = `${allInfoCalendar.month}-${allInfoCalendar.year}`;
-      const docRef = doc(db, "reservationDate", id);
-      await setDoc(docRef, newReservation);
-      console.log("Documento creado con ID personalizado:", id);
 
       // const reservations = querySnapshot.docs.map((doc) => {
       //   console.log(doc.id, doc.data().placeAndPeople ); // mostrar en consola
@@ -77,6 +93,15 @@ export const ReservartionsProvider = ({ children }) => {
       // const docRef = await addDoc(collectionRef, newReservation);
 
       // console.log("Reservas encontradas:", docRef);
+
+      // obtener infomacion
+      // const id = `${allInfoCalendar.month}-${allInfoCalendar.year}`;
+
+      // const collectionRef = doc(db, "reservationDate", id);
+
+      // const getRef = await getDoc(collectionRef);
+
+      // console.log(getRef.data());
 
       return true;
     } catch (error) {
