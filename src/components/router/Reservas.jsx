@@ -112,7 +112,7 @@ function Reservas() {
 
   // form funticion
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const people = e.target.people.value;
@@ -121,8 +121,10 @@ function Reservas() {
     const date = { people, time, place };
 
     //save reservation
-    dateOfReservation(date, allInfoCalendar);
+    const responseReservation = await dateOfReservation(date, allInfoCalendar);
 
+    console.log(responseReservation);
+    
     // setSections("personalInformation");
   };
 

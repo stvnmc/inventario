@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from "react";
 import { db } from "../firebase/config";
 import {
   addDoc,
+  arrayUnion,
   collection,
   doc,
   getDoc,
@@ -38,72 +39,45 @@ export const ReservartionsProvider = ({ children }) => {
   });
 
   async function dateOfReservation(date, allInfoCalendar) {
-    // setPlaceAndPeople({
-    //   place: date.place,
-    //   people: date.people,
-    //   time: date.time,
-    // });
-
-    // const collectionRef = collection(db, "reservationDate");
-
-    console.log(allInfoCalendar.day);
-    console.log(allInfoCalendar.month);
-    console.log(allInfoCalendar.year);
+    setPlaceAndPeople({
+      place: date.place,
+      people: date.people,
+      time: date.time,
+    });
 
     try {
-      // const newReservation = {
-      //   placeAndPeople: date,
-      //   createdAt: new Date(),
-      // };
+      const newReservation = {
+        people: date.people,
+        plase: date.place,
+      };
 
-      // Documento por mes y año
       const id = `${allInfoCalendar.month}-${allInfoCalendar.year}`;
+      const day = `${allInfoCalendar.day}`;
+      console.log(day);
 
-      // Referencia al documento principal
-      const docRef = doc(db, "reservationDate", id, date.time);
+      const dayCollectionRef = collection(doc(db, "reservation", id), day);
 
-      // Referencia a la subcolección "reservas" dentro de ese documento
-      const subColRef = collection(docRef, "reservas");
+      // Obtener todos los documentos de ese día
+      const querySnapshot = await getDocs(dayCollectionRef);
 
-      // Agregar una nueva reserva (no borra las anteriores)
-      const dsads = await addDoc(subColRef, date);
+      const reservas = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-      console.log(dsads);
+      const totalReservas = reservas.length;
 
-      // await updateDoc(collectionRef, {
-      //   campoNuevo: "actualizado o agregado",
-      // });
+      console.log(reservas);
+      if (totalReservas < 5) {
+        const docRef = doc(db, "reservation", id);
 
-      // const docRef = await addDoc(reservationsCollectionRef, newReservation);
+        const timeCollectionRef = collection(docRef, day);
 
-      // console.log("Reserva guardada con ID:", docRef.id);
+        await addDoc(timeCollectionRef, newReservation, date.time);
+        return true;
+      }
 
-      // await setDoc(docRef, newReservation);
-
-      // const docRef = doc(collectionRef, newReservation);
-
-      // const reservations = querySnapshot.docs.map((doc) => {
-      //   console.log(doc.id, doc.data().placeAndPeople ); // mostrar en consola
-      //   return {
-      //     id: doc.id,
-      //     ...doc.data(), // devolver los datos
-      //   };
-      // });
-
-      // const docRef = await addDoc(collectionRef, newReservation);
-
-      // console.log("Reservas encontradas:", docRef);
-
-      // obtener infomacion
-      // const id = `${allInfoCalendar.month}-${allInfoCalendar.year}`;
-
-      // const collectionRef = doc(db, "reservationDate", id);
-
-      // const getRef = await getDoc(collectionRef);
-
-      // console.log(getRef.data());
-
-      return true;
+      return `cupo limitado a las ${date.time}`;
     } catch (error) {
       console.error("Error adding document: ", error);
       return false;
