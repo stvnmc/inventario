@@ -53,6 +53,8 @@ export const ReservartionsProvider = ({ children }) => {
 
       const id = `${allInfoCalendar.month}-${allInfoCalendar.year}`;
       const day = `${allInfoCalendar.day}`;
+      const hour = date.time;
+
       console.log(day);
 
       const dayCollectionRef = collection(doc(db, "reservation", id), day);
@@ -67,13 +69,19 @@ export const ReservartionsProvider = ({ children }) => {
 
       const totalReservas = reservas.length;
 
-      console.log(reservas);
+      console.log(totalReservas);
+
       if (totalReservas < 5) {
-        const docRef = doc(db, "reservation", id);
+        // const docRef = doc(db, "reservation", id);
 
-        const timeCollectionRef = collection(docRef, day);
+        // const timeCollectionRef = collection(docRef, day);
 
-        await addDoc(timeCollectionRef, newReservation, date.time);
+        // await addDoc(timeCollectionRef, newReservation, date.time);
+        // return true;
+
+        const timeDocRef = doc(db, "reservation", id, day, hour);
+
+        await setDoc(timeDocRef, { user: newReservation }, { merge: true });
         return true;
       }
 
@@ -90,7 +98,6 @@ export const ReservartionsProvider = ({ children }) => {
       phoneClient: date.phoneClient,
       mailClient: date.mailClient,
     });
-
     return;
   }
 
