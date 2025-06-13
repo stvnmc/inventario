@@ -93,7 +93,7 @@ function Reservas() {
 
   // funtion
 
-  const goBackForm = () => {
+  const goBackForm = () => {     
     if (sections === "personalInformation")
       return setSections("placeAndPeople");
     if (sections === "confirmInformation")

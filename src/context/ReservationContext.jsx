@@ -55,37 +55,85 @@ export const ReservartionsProvider = ({ children }) => {
       const day = `${allInfoCalendar.day}`;
       const hour = date.time;
 
-      console.log(day);
+      // console.log(day);
 
-      const dayCollectionRef = collection(doc(db, "reservation", id), day);
+      // const dayCollectionRef = collection(doc(db, "reservation", id), day);
 
-      // Obtener todos los documentos de ese día
-      const querySnapshot = await getDocs(dayCollectionRef);
+      // // Obtener todos los documentos de ese día
+      // const querySnapshot = await getDocs(dayCollectionRef);
 
-      const reservas = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      // const reservas = querySnapshot.docs.map((doc) => ({
+      //   id: doc.id,
+      //   ...doc.data(),
+      // }));
 
-      const totalReservas = reservas.length;
+      // const totalReservas = reservas.length;
 
-      console.log(totalReservas);
+      // console.log(totalReservas);
 
-      if (totalReservas < 5) {
-        // const docRef = doc(db, "reservation", id);
+      // const parentDoc = doc(db, "reservation", id); // id = "6-2025"
 
-        // const timeCollectionRef = collection(docRef, day);
+      // // Subcolección del día, por ejemplo: "10"
+      // const dayCollection = collection(parentDoc, day); // day = "10"
 
-        // await addDoc(timeCollectionRef, newReservation, date.time);
-        // return true;
+      // // Subcolección de la hora, por ejemplo: "12:30 pm"
+      // const hourCollection = collection(dayCollection, hour); // hour = "12:30 pm"
 
-        const timeDocRef = doc(db, "reservation", id, day, hour);
+      // // Obtener los documentos dentro de esa hora
+      // const querySnapshot = await getDocs(hourCollection);
 
-        await setDoc(timeDocRef, { user: newReservation }, { merge: true });
-        return true;
+      // // Mapear los documentos
+      // const reservas = querySnapshot.docs.map((doc) => ({
+      //   id: doc.id,
+      //   ...doc.data(),
+      // }));
+
+      // console.log(reservas);
+      const parentDoc = doc(db, "reservation", id); // "6-2025"
+      const dayCollection = collection(parentDoc, day); // "10"
+      const hourDocRef = doc(dayCollection, hour); // "12:30 pm" (documento dentro de la subcolección "10")
+
+      const docSnap = await getDoc(hourDocRef);
+
+      if (!docSnap.exists()) {
+        // Agrega la reserva
+
+        await setDoc(hourDocRef, { 1: newReservation });
+        console.log(docSnap.data());
+      } else {
+        const data = docSnap.data();
+        const firstKey = Object.keys(data)[0];
+        const newkey = Number(firstKey) + 1;
+
+        await setDoc(hourDocRef, { [newkey]: newReservation }, { merge: true });
+
+        // await setDoc(hourDocRef, { user: newReservation });
+
+        // const reservations = await getDoc(hourDocRef);
+        // console.log(reservations.data());
       }
 
-      return `cupo limitado a las ${date.time}`;
+      // if (reservas < 5) {
+      //   // const docRef = doc(db, "reservation", id);
+
+      //   // const timeCollectionRef = collection(docRef, day);
+
+      //   // await addDoc(timeCollectionRef, newReservation, date.time);
+      //   // return true;
+
+      //   const parentDoc = doc(db, "reservation", id); // "6-2025"
+      //   const dayCollection = collection(parentDoc, day); // subcolección "10"
+      //   const hourCollection = collection(dayCollection, hour);
+
+      //   const newDocRef = doc(hourCollection);
+      //   await setDoc(newDocRef, newReservation);
+
+      //   console.log("dasdas");
+
+      //   return true;
+      // }
+
+      // return `cupo limitado a las ${date.time}`;
     } catch (error) {
       console.error("Error adding document: ", error);
       return false;
