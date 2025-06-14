@@ -89,9 +89,9 @@ export const ReservartionsProvider = ({ children }) => {
       // }));
 
       // console.log(reservas);
-      const parentDoc = doc(db, "reservation", id); // "6-2025"
-      const dayCollection = collection(parentDoc, day); // "10"
-      const hourDocRef = doc(dayCollection, hour); // "12:30 pm" (documento dentro de la subcolección "10")
+      const parentDoc = doc(db, "reservation", id);
+      const dayCollection = collection(parentDoc, day);
+      const hourDocRef = doc(dayCollection, hour);
 
       const docSnap = await getDoc(hourDocRef);
 
@@ -102,10 +102,15 @@ export const ReservartionsProvider = ({ children }) => {
         console.log(docSnap.data());
       } else {
         const data = docSnap.data();
-        const firstKey = Object.keys(data)[0];
+        const firstKey = Object.keys(data).length;
         const newkey = Number(firstKey) + 1;
+        console.log(firstKey);
+        console.log(newkey);
+        console.log(data);
 
         await setDoc(hourDocRef, { [newkey]: newReservation }, { merge: true });
+
+        console.log("dasdasd");
 
         // await setDoc(hourDocRef, { user: newReservation });
 
