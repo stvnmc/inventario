@@ -93,7 +93,7 @@ function Reservas() {
 
   // funtion
 
-  const goBackForm = () => {     
+  const goBackForm = () => {
     if (sections === "personalInformation")
       return setSections("placeAndPeople");
     if (sections === "confirmInformation")
@@ -122,13 +122,17 @@ function Reservas() {
 
     //save reservation
     const responseReservation = await dateOfReservation(date, allInfoCalendar);
-
-    console.log(responseReservation);
-    
-    // setSections("personalInformation");
+    if (!responseReservation) {
+      setError({
+        name: "first",
+        isValid: false,
+        textError: "Cupo lleno cambia la hora de tu reserva",
+      });
+    }
+    setSections("personalInformation");
   };
 
-  const handleSubmitPersonalInfo = (event) => {
+  const handleSubmitPersonalInfo = async (event) => {
     event.preventDefault();
 
     const { name, isValid, textError } = validateForm(event);
@@ -140,9 +144,8 @@ function Reservas() {
 
     const nameClient = event.target.name.value.trim();
     const phoneClient = event.target.phone.value.replace(/\s+/g, "");
-    console.log(phoneClient);
 
-    const mailClient = event.target.mail.value.trim() || "sin correo";
+    const mailClient = event.target.mail.value.trim() || null;
 
     setNameOfStateForm(nameClient);
     setPhoneOfStateForm(phoneClient);
@@ -151,7 +154,7 @@ function Reservas() {
     const type = "personalInformation";
 
     //save reservation
-    personalInformationOfReservation(type, date);
+    await personalInformationOfReservation(type, date);
 
     setSections("confirmInformation");
   };
@@ -229,6 +232,7 @@ function Reservas() {
           <div className="button-reservas-continue">
             <button>Reservar</button>
           </div>
+          <h2>{error.name === "first" ? error.textError : null}</h2>
         </form>
       );
     if (sections === "personalInformation")
@@ -303,7 +307,9 @@ function Reservas() {
           <div>
             <h2>nombre:{personalInformation.nameClient}</h2>
             <h2>numero:{personalInformation.phoneClient}</h2>
-            <h2>mail:{personalInformation.mailClient}</h2>
+            {personalInformation.mailClient ? (
+              <h2>mail:{personalInformation.mailClient}</h2>
+            ) : null}
           </div>
 
           <button onClick={confirmInformation}>confirmar reserva</button>
