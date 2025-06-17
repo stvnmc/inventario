@@ -38,6 +38,12 @@ export const ReservartionsProvider = ({ children }) => {
     mailClient: null,
   });
 
+  const [timeReservation, SetTimeReservation] = useState({
+    id: null,
+    day: null,
+    hour: null,
+  });
+
   async function dateOfReservation(date, allInfoCalendar) {
     setPlaceAndPeople({
       place: date.place,
@@ -45,36 +51,30 @@ export const ReservartionsProvider = ({ children }) => {
       time: date.time,
     });
 
+    const id = `${allInfoCalendar.month}-${allInfoCalendar.year}`;
+    const day = `${allInfoCalendar.day}`;
+    const hour = date.time;
+
+    SetTimeReservation({
+      id: id,
+      day: day,
+      hour: hour,
+    });
+
+    const parentDoc = doc(db, "reservation", id);
+    const dayCollection = collection(parentDoc, day);
+    const hourDocRef = doc(dayCollection, hour);
+
     try {
-      const newReservation = {
-        people: date.people,
-        plase: date.place,
-      };
-
-      const id = `${allInfoCalendar.month}-${allInfoCalendar.year}`;
-      const day = `${allInfoCalendar.day}`;
-      const hour = date.time;
-
-      const parentDoc = doc(db, "reservation", id);
-      const dayCollection = collection(parentDoc, day);
-      const hourDocRef = doc(dayCollection, hour);
-
       const docSnap = await getDoc(hourDocRef);
 
       if (!docSnap.exists()) {
         return true;
-        // await setDoc(hourDocRef, { 1: newReservation });
       } else {
         const data = docSnap.data();
         const firstKey = Object.keys(data).length;
-        if (firstKey < 5) {
-          // const newkey = Number(firstKey) + 1;
 
-          // await setDoc(
-          //   hourDocRef,
-          //   { [newkey]: newReservation },
-          //   { merge: true }
-          // );
+        if (firstKey < 5) {
           return true;
         }
         return false;
@@ -93,19 +93,26 @@ export const ReservartionsProvider = ({ children }) => {
         mailClient: date.mailClient,
       });
     }
+
+    return true;
   }
 
   async function finalizeReservation() {
-    const collectionRef = collection(db, "reservation");
-
     try {
-      const newReservation = {
-        personalInformation: personalInformation,
-        createdAt: new Date(),
-      };
+      const { id, day, hour } = timeReservation;
 
-      const docRef = await addDoc(collectionRef, newReservation);
-      console.log("Document written with ID: ", docRef.id);
+      const hourDocRef = doc(db, "reservation", id, day, hour);
+
+      await setDoc(
+        hourDocRef,
+        {
+          [personalInformation.nameClient]: {
+            personalInformation,
+            placeAndPeople,
+          },
+        },
+        { merge: true }
+      );
 
       return true;
     } catch (error) {

@@ -24,7 +24,6 @@ function Reservas() {
     isValid: true,
     textError: "null",
   });
-
   //useState of form personal
 
   const [nameOfStateForm, setNameOfStateForm] = useState(null);
@@ -128,6 +127,7 @@ function Reservas() {
         isValid: false,
         textError: "Cupo lleno cambia la hora de tu reserva",
       });
+      return;
     }
     setSections("personalInformation");
   };
@@ -246,7 +246,7 @@ function Reservas() {
             <input
               name="name"
               placeholder="Nombre Completo"
-              value={nameOfStateForm}
+              value={nameOfStateForm || ""}
               onChange={(e) => setNameOfStateForm(e.target.value)}
               required
             ></input>
@@ -264,7 +264,7 @@ function Reservas() {
                   name="phone"
                   placeholder="Telefono"
                   type="num"
-                  value={phoneOfStateForm}
+                  value={phoneOfStateForm || ""}
                   onChange={(e) => setPhoneOfStateForm(e.target.value)}
                   required
                 ></input>
@@ -278,7 +278,7 @@ function Reservas() {
                   placeholder="Correo"
                   type="text"
                   onChange={(e) => setMailOfStateForm(e.target.value)}
-                  value={mailOfStateForm}
+                  value={mailOfStateForm || ""}
                 ></input>
                 {/* error */}
                 <h2>{error.name === "mail" ? error.textError : null}</h2>

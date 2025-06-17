@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Inventory from "./Inventory";
 import Missing from "./Missing";
+import AdminReservation from "./adminReservation";
 
 const Dashboard = () => {
   const [site, setSite] = useState("dashboard");
@@ -23,7 +24,7 @@ const Dashboard = () => {
 
         <div
           className="dashboard-containers"
-          onClick={() => setSite("missing")}
+          onClick={() => setSite("reservationAdmin")}
         >
           <h1>reservas</h1>
         </div>
@@ -44,7 +45,7 @@ const Dashboard = () => {
       <main>
         {site === "dashboard" && dashboard()}
         {site === "inventory" && <Inventory setSite={setSite} site={site} />}
-        {site === "missing" && <Missing />}
+        {site === "reservationAdmin" && <AdminReservation />}
       </main>
     </div>
   );

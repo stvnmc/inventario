@@ -17,7 +17,6 @@ export const getInfoCalendar = async (month, day) => {
 };
 
 const getDaysMonth = (type, month, day) => {
-  
   const idAdjustment = (e) => {
     if (e === "date") {
       return type === "next"
