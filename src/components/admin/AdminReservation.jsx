@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from "react";
 
 import { SlArrowRight, SlArrowLeft } from "react-icons/sl";
-import { getInfoCalendar } from "../../infoPage/GetCalendar.js";
+import {
+  dayNames,
+  dayOfMonth,
+  getInfoCalendar,
+  month,
+  monthsNames,
+  year,
+} from "../../infoPage/GetCalendar.js";
+import { useAdminReservation } from "../../context/AdminReservationContext.jsx";
 
 const AdminReservation = () => {
+  //context
+  const { getAllReservationsOfMonth } = useAdminReservation();
+  // state
   const [infoCalendar, setInfoCalendar] = useState([]);
   const [monthChance, setMonthChance] = useState(new Date().getMonth() + 1);
   const [yearChance, setYearChance] = useState(new Date().getFullYear());
@@ -11,34 +22,16 @@ const AdminReservation = () => {
     new Date().getDate()
   );
 
-  const month = new Date().getMonth() + 1;
-  const dayOfMonth = new Date().getDate();
-  const year = new Date().getFullYear();
-
-  const monthsNames = [
-    "enero",
-    "Febrero",
-    "Marzo",
-    "Abril",
-    "Mayo",
-    "Junio",
-    "Julio",
-    "Agosto",
-    "Septiembre",
-    "Octubre",
-    "Noviembre",
-    "Diciembre",
-  ];
-
-  const dayNames = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
-
   const getCalendar = async () => {
     const calendarInfo = await getInfoCalendar(monthChance, dayOfMonth);
     setInfoCalendar(calendarInfo);
   };
 
+  //useEffect
+
   useEffect(() => {
     getCalendar(monthChance);
+    getInfoAdminReservation();
   }, [monthChance]);
 
   const chanceMonthCalendar = (e) => {
@@ -53,6 +46,13 @@ const AdminReservation = () => {
       }
       return e === "former" ? prev - 1 : prev + 1;
     });
+  };
+
+  // context calendar
+
+  const getInfoAdminReservation = async () => {
+    console.log("asd");
+    await getAllReservationsOfMonth(monthChance, yearChance);
   };
 
   return (

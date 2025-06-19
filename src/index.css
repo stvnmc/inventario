@@ -1531,10 +1531,25 @@ select::-webkit-scrollbar-thumb {
 
 .adminReservation .calendar {
   position: relative;
-  height: 3vh;
+  height: 60vh;
+  width: 60vw;
 }
 .adminReservation .calendar-days {
- 
+}
+
+.adminReservation .icons-days-name {
+  width: 100%;
+}
+.adminReservation .icons-days-name h2 {
+  padding: 0 3.7%;
+}
+
+.adminReservation .calendar-days {
+  display: grid;
+  height: 184px;
+  gap: 0% 0%;
+  grid-template-columns: repeat(7, 14.3%);
+  grid-template-rows: repeat(6, 45.5%);
 }
 
 /*/ ///////

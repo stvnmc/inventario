@@ -67,3 +67,32 @@ const getDaysMonth = (type, month, day) => {
 
   return daysArray;
 };
+
+export const monthsNames = [
+  "enero",
+  "Febrero",
+  "Marzo",
+  "Abril",
+  "Mayo",
+  "Junio",
+  "Julio",
+  "Agosto",
+  "Septiembre",
+  "Octubre",
+  "Noviembre",
+  "Diciembre",
+];
+
+export const dayNames = [
+  "Domingo",
+  "Lunes",
+  "Martes",
+  "Miércoles",
+  "Jueves",
+  "Viernes",
+  "Sábado",
+];
+
+export const month = new Date().getMonth() + 1;
+export const dayOfMonth = new Date().getDate();
+export const year = new Date().getFullYear();
