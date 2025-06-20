@@ -114,10 +114,30 @@ export const ReservartionsProvider = ({ children }) => {
         { merge: true }
       );
 
+      await addDayToReservation(id, day);
+
       return true;
     } catch (error) {
       console.error("Error adding document: ", error);
       return false;
+    }
+  }
+
+  async function addDayToReservation(id, day) {
+    const parentDoc = doc(db, "reservation", id);
+
+    try {
+      await updateDoc(parentDoc, {
+        days: arrayUnion(day),
+      });
+    } catch (error) {
+      if (error.code === "not-found") {
+        await setDoc(parentDoc, {
+          days: [day],
+        });
+      } else {
+        console.error("Error al agregar día:", error);
+      }
     }
   }
 

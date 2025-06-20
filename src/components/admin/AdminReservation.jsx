@@ -13,14 +13,11 @@ import { useAdminReservation } from "../../context/AdminReservationContext.jsx";
 
 const AdminReservation = () => {
   //context
-  const { getAllReservationsOfMonth } = useAdminReservation();
+  const { getAllReservationsOfMonth, reservations } = useAdminReservation();
   // state
   const [infoCalendar, setInfoCalendar] = useState([]);
   const [monthChance, setMonthChance] = useState(new Date().getMonth() + 1);
   const [yearChance, setYearChance] = useState(new Date().getFullYear());
-  const [dayOfMonthChance, setDayOfMonthChance] = useState(
-    new Date().getDate()
-  );
 
   const getCalendar = async () => {
     const calendarInfo = await getInfoCalendar(monthChance, dayOfMonth);
@@ -51,7 +48,6 @@ const AdminReservation = () => {
   // context calendar
 
   const getInfoAdminReservation = async () => {
-    console.log("asd");
     await getAllReservationsOfMonth(monthChance, yearChance);
   };
 
@@ -116,6 +112,10 @@ const AdminReservation = () => {
                   className={classNames}
                 >
                   {dayNumber}
+
+                  {reservations ? (
+                    <div>{reservations[dayNumber] ? "existe" : null}</div>
+                  ) : null}
                 </div>
               );
             })}

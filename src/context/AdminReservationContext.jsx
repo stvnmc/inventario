@@ -17,43 +17,43 @@ export const useAdminReservation = () => {
 };
 
 export const AdminReservationProvider = ({ children }) => {
+  const [reservations, setReservations] = useState(null);
+
   async function getAllReservationsOfMonth(month, year) {
     const monthYear = `${month}-${year}`;
-    const allReservations = {};
 
-    for (let day = 1; day <= 31; day++) {
-      const dayStr = day.toString();
+    const monthDocRef = doc(db, "reservation", monthYear);
+    const monthDocSnap = await getDoc(monthDocRef);
+    const days = monthDocSnap.data().days;
 
-      // 1. Referencia al documento del mes-año
-      const monthDocRef = doc(db, "reservation", monthYear);
-
-      // 2. Obtener la subcolección del día correctamente
-      const dayCollectionRef = collection(monthDocRef, dayStr);
-
-      try {
-        const snapshot = await getDocs(dayCollectionRef);
-        console.log(allReservations);
-
-        if (!snapshot.empty) {
-          allReservations[dayStr] = {};
-
-          snapshot.forEach((docSnap) => {
-            allReservations[dayStr][docSnap.id] = docSnap.data();
-          });
-        }
-      } catch (error) {
-        console.error(
-          `Error obteniendo reservas para el día ${dayStr}:`,
-          error
-        );
-      }
+    if (!monthDocSnap.exists()) {
+      console.warn("No existe el documento del mes:", monthYear);
+      return {};
     }
 
-    return allReservations;
+    const allReservations = {};
+
+    for (const day of days) {
+      const ref = collection(db, "reservation", monthYear, day);
+      const snapshot = await getDocs(ref);
+
+      const reservations = [];
+
+      snapshot.forEach((doc) => {
+        reservations.push({ id: doc.id, ...doc.data() });
+      });
+      allReservations[day] = reservations;
+    }
+
+    setReservations(allReservations);
+    console.log(allReservations[20]);
+    return;
   }
 
   return (
-    <AdminReservationContext.Provider value={{ getAllReservationsOfMonth }}>
+    <AdminReservationContext.Provider
+      value={{ getAllReservationsOfMonth, reservations }}
+    >
       {children}
     </AdminReservationContext.Provider>
   );
