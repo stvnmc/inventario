@@ -19,6 +19,11 @@ const AdminReservation = () => {
   const [monthChance, setMonthChance] = useState(new Date().getMonth() + 1);
   const [yearChance, setYearChance] = useState(new Date().getFullYear());
 
+  //state page effects
+
+  const [calendarState, setCalendarState] = useState("open");
+  const [calendarStateId, setCalendarStateId] = useState(null);
+
   const getCalendar = async () => {
     const calendarInfo = await getInfoCalendar(monthChance, dayOfMonth);
     setInfoCalendar(calendarInfo);
@@ -30,6 +35,16 @@ const AdminReservation = () => {
     getCalendar(monthChance);
     getInfoAdminReservation();
   }, [monthChance]);
+
+  useEffect(() => {
+    if (calendarStateId && reservations[calendarStateId]) {
+      console.log(reservations[calendarStateId][0]);
+      Object.values(reservations[calendarStateId][0]).map((item, index) => {
+        console.log(item);
+        console.log(index);
+      });
+    }
+  }, [calendarStateId, reservations]);
 
   const chanceMonthCalendar = (e) => {
     setMonthChance((prev) => {
@@ -51,11 +66,19 @@ const AdminReservation = () => {
     await getAllReservationsOfMonth(monthChance, yearChance);
   };
 
+  // funtion
+
+  const openNextPart = (e) => {
+    setCalendarState("second");
+    setCalendarStateId(e);
+  };
+
   return (
     <div>
-      adminReservation
       <div className="adminReservation">
-        <div className="calendar">
+        <div
+          className={`calendar ${calendarState === "second" ? "close" : ""}`}
+        >
           <div className="calendar-month">
             <div
               className="calendar-month-button"
@@ -73,7 +96,9 @@ const AdminReservation = () => {
           </div>
           <div className="icons-days-name">
             {dayNames.map((dayName, index) => (
-              <h2 key={index}>{dayName}</h2>
+              <h2 key={index}>
+                {calendarState === "second" ? dayName.slice(0, 2) : dayName}
+              </h2>
             ))}
           </div>
           <div className="calendar-days">
@@ -92,7 +117,10 @@ const AdminReservation = () => {
                 if (type === "former" || type === "next") {
                   chanceMonthCalendar(type);
                 } else {
-                  pushInfoCalendar(dayNumber);
+                  reservations &&
+                    reservations[dayNumber] &&
+                    !isNotAllowed &&
+                    openNextPart(dayNumber);
                 }
               };
 
@@ -113,13 +141,31 @@ const AdminReservation = () => {
                 >
                   {dayNumber}
 
-                  {reservations ? (
-                    <div>{reservations[dayNumber] ? "existe" : null}</div>
-                  ) : null}
+                  {reservations && reservations[dayNumber] && !isNotAllowed && (
+                    <div>existe</div>
+                  )}
                 </div>
               );
             })}
           </div>
+        </div>
+        <div className="">
+          <h2>show time reservationF</h2>
+          {reservations &&
+            calendarStateId &&
+            reservations[calendarStateId] &&
+            Object.values(reservations[calendarStateId][0]).map(
+              (item, index) => (
+                <div className={index} key={index}>
+                  <div>{item.placeAndPeople.people}</div>
+                  <div>{item.placeAndPeople.place}</div>
+                  <div>{item.placeAndPeople.time}</div>
+                  <div>{item.personalInformation.nameClient}</div>
+                  <div>{item.personalInformation.phoneClient}</div>
+                  <div>{item.personalInformation.mailClient}</div>
+                </div>
+              )
+            )}
         </div>
       </div>
     </div>

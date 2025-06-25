@@ -129,6 +129,7 @@ function Reservas() {
       });
       return;
     }
+    console.log(responseReservation);
     setSections("personalInformation");
   };
 

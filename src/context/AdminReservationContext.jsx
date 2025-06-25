@@ -40,13 +40,12 @@ export const AdminReservationProvider = ({ children }) => {
       const reservations = [];
 
       snapshot.forEach((doc) => {
-        reservations.push({ id: doc.id, ...doc.data() });
+        reservations.push({ ...doc.data() });
       });
       allReservations[day] = reservations;
     }
 
     setReservations(allReservations);
-    console.log(allReservations[20]);
     return;
   }
 

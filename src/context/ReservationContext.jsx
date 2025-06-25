@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { db } from "../firebase/config";
 import {
   addDoc,
@@ -26,6 +26,9 @@ export const useReservations = () => {
 };
 
 export const ReservartionsProvider = ({ children }) => {
+  // state
+  const [idReservation, setIdReservation] = useState(null);
+
   const [placeAndPeople, setPlaceAndPeople] = useState({
     place: null,
     people: null,
@@ -43,6 +46,12 @@ export const ReservartionsProvider = ({ children }) => {
     day: null,
     hour: null,
   });
+
+  // fuction
+
+  useEffect(() => {
+    console.log(idReservation);
+  }, [idReservation]);
 
   async function dateOfReservation(date, allInfoCalendar) {
     setPlaceAndPeople({
@@ -69,10 +78,12 @@ export const ReservartionsProvider = ({ children }) => {
       const docSnap = await getDoc(hourDocRef);
 
       if (!docSnap.exists()) {
+        setIdReservation(0);
         return true;
       } else {
         const data = docSnap.data();
         const firstKey = Object.keys(data).length;
+        setIdReservation(firstKey);
 
         if (firstKey < 5) {
           return true;
@@ -106,7 +117,7 @@ export const ReservartionsProvider = ({ children }) => {
       await setDoc(
         hourDocRef,
         {
-          [personalInformation.nameClient]: {
+          [idReservation]: {
             personalInformation,
             placeAndPeople,
           },

@@ -1233,10 +1233,6 @@ select option {
   background-color: #63837f;
 }
 
-.calendar-days div:hover {
-  background-color: #4e4e4c;
-}
-
 .calendar-days .next,
 .calendar-days .former {
   background-color: #8f8e85;
@@ -1253,7 +1249,7 @@ select option {
 
 .not-allowed:hover {
   cursor: default;
-  background-color: rgb(56 42 43);
+  background-color: rgba(56, 42, 43, 0.553);
 }
 
 .calendar-days div {
@@ -1528,12 +1524,16 @@ select::-webkit-scrollbar-thumb {
 /////////////////////// adminReservation //////////
 ///////////////
 //////////////////// */
+.adminReservation {
+  display: flex;
+}
 
 .adminReservation .calendar {
   position: relative;
   height: 60vh;
   width: 60vw;
 }
+
 .adminReservation .calendar-days {
 }
 
@@ -1549,7 +1549,12 @@ select::-webkit-scrollbar-thumb {
   height: 184px;
   gap: 0% 0%;
   grid-template-columns: repeat(7, 14.3%);
-  grid-template-rows: repeat(6, 45.5%);
+  grid-template-rows: repeat(6, 16.5%);
+}
+
+.calendar.close {
+  width: 16vw;
+  height: 25vh;
 }
 
 /*/ ///////
