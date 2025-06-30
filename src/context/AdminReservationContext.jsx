@@ -24,12 +24,13 @@ export const AdminReservationProvider = ({ children }) => {
 
     const monthDocRef = doc(db, "reservation", monthYear);
     const monthDocSnap = await getDoc(monthDocRef);
-    const days = monthDocSnap.data().days;
 
     if (!monthDocSnap.exists()) {
       console.warn("No existe el documento del mes:", monthYear);
-      return {};
+      return setReservations();
     }
+
+    const days = monthDocSnap.data().days;
 
     const allReservations = {};
 

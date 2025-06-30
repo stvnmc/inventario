@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 
 import { SlArrowRight, SlArrowLeft } from "react-icons/sl";
+import { BiUserMinus } from "react-icons/bi";
+import { BiUserPlus } from "react-icons/bi";
+import { BiUserCheck } from "react-icons/bi";
 import {
   dayNames,
   dayOfMonth,
@@ -37,14 +40,9 @@ const AdminReservation = () => {
   }, [monthChance]);
 
   useEffect(() => {
-    if (calendarStateId && reservations[calendarStateId]) {
-      console.log(reservations[calendarStateId][0]);
-      Object.values(reservations[calendarStateId][0]).map((item, index) => {
-        console.log(item);
-        console.log(index);
-      });
-    }
-  }, [calendarStateId, reservations]);
+    console.log(calendarStateId);
+    console.log(reservations);
+  }, [reservations]);
 
   const chanceMonthCalendar = (e) => {
     setMonthChance((prev) => {
@@ -141,27 +139,37 @@ const AdminReservation = () => {
                 >
                   {dayNumber}
 
-                  {reservations && reservations[dayNumber] && !isNotAllowed && (
-                    <div>existe</div>
-                  )}
+                  {reservations &&
+                    reservations[dayNumber] &&
+                    !isNotAllowed &&
+                    type === "current" && <div>existe</div>}
                 </div>
               );
             })}
           </div>
         </div>
-        <div className="">
-          <h2>show time reservationF</h2>
+        <div className="reservations">
           {reservations &&
             calendarStateId &&
             reservations[calendarStateId] &&
             Object.values(reservations[calendarStateId][0]).map(
               (item, index) => (
-                <div className={index} key={index}>
-                  <div>{item.placeAndPeople.people}</div>
-                  <div>{item.placeAndPeople.place}</div>
-                  <div>{item.placeAndPeople.time}</div>
-                  <div>{item.personalInformation.nameClient}</div>
-                  <div>{item.personalInformation.phoneClient}</div>
+                <div className="reservation" key={index}>
+                  <div>
+                    <BiUserMinus />
+                    <BiUserPlus />
+                    <BiUserCheck />
+                  </div>
+                  <h2>{item.personalInformation.nameClient}</h2>
+                  <div>
+                    <h2>datos personales</h2>
+                    <h3>{item.personalInformation.phoneClient}</h3>
+                  </div>
+                  <div>
+                    <div>{item.placeAndPeople.time}</div>
+                    <div>{item.placeAndPeople.people}</div>
+                    <div>{item.placeAndPeople.place}</div>
+                  </div>
                   <div>{item.personalInformation.mailClient}</div>
                 </div>
               )

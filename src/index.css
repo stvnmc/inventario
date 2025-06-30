@@ -1557,6 +1557,24 @@ select::-webkit-scrollbar-thumb {
   height: 25vh;
 }
 
+.calendar.close .icons-days-name h2 {
+  padding: 0 1.5%;
+}
+
+/*/ ///////
+///////////////
+/////////////////////// reservations //////////
+///////////////
+//////////////////// */
+
+.reservations {
+  height: 60vh;
+  width: 60vw;
+}
+.reservation{
+  margin: 2vh 2vw;
+}
+
 /*/ ///////
 ///////////////
 /////////////////////// Footer //////////
