@@ -26,7 +26,6 @@ export const AdminReservationProvider = ({ children }) => {
     const monthDocSnap = await getDoc(monthDocRef);
 
     if (!monthDocSnap.exists()) {
-      console.warn("No existe el documento del mes:", monthYear);
       return setReservations();
     }
 
@@ -50,9 +49,11 @@ export const AdminReservationProvider = ({ children }) => {
     return;
   }
 
+  async function deletedReservations() {}
+
   return (
     <AdminReservationContext.Provider
-      value={{ getAllReservationsOfMonth, reservations }}
+      value={{ getAllReservationsOfMonth, reservations, deletedReservations }}
     >
       {children}
     </AdminReservationContext.Provider>

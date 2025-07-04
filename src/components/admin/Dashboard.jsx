@@ -33,21 +33,11 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="dashboard-main">
-      {/* <nav>
-        {site !== "dashboard" && (
-          <button onClick={() => setSite("dashboard")}>
-            <IoMdClose />
-          </button>
-        )}
-      </nav> */}
-
-      <main>
-        {site === "dashboard" && dashboard()}
-        {site === "inventory" && <Inventory setSite={setSite} site={site} />}
-        {site === "reservationAdmin" && <AdminReservation />}
-      </main>
-    </div>
+    <main>
+      {site === "dashboard" && dashboard()}
+      {site === "inventory" && <Inventory setSite={setSite} site={site} />}
+      {site === "reservationAdmin" && <AdminReservation setSite={setSite} />}
+    </main>
   );
 };
 

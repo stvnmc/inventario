@@ -4,6 +4,7 @@ import { SlArrowRight, SlArrowLeft } from "react-icons/sl";
 import { BiUserMinus } from "react-icons/bi";
 import { BiUserPlus } from "react-icons/bi";
 import { BiUserCheck } from "react-icons/bi";
+import { MdArrowBackIosNew } from "react-icons/md";
 import {
   dayNames,
   dayOfMonth,
@@ -14,7 +15,7 @@ import {
 } from "../../infoPage/GetCalendar.js";
 import { useAdminReservation } from "../../context/AdminReservationContext.jsx";
 
-const AdminReservation = () => {
+const AdminReservation = ({ setSite }) => {
   //context
   const { getAllReservationsOfMonth, reservations } = useAdminReservation();
   // state
@@ -72,109 +73,103 @@ const AdminReservation = () => {
   };
 
   return (
-    <div>
-      <div className="adminReservation">
-        <div
-          className={`calendar ${calendarState === "second" ? "close" : ""}`}
-        >
-          <div className="calendar-month">
-            <div
-              className="calendar-month-button"
-              onClick={() => chanceMonthCalendar("former")}
-            >
-              <SlArrowLeft />
-            </div>
-            <h2>{monthsNames[monthChance]}</h2>
-            <div
-              className="calendar-month-button"
-              onClick={() => chanceMonthCalendar("next")}
-            >
-              <SlArrowRight />
-            </div>
+    <div className="adminReservation">
+      <div>
+        <MdArrowBackIosNew onClick={() => setSite("dashboard")} />
+      </div>
+      <div className={`calendar ${calendarState === "second" ? "close" : ""}`}>
+        <div className="calendar-month">
+          <div
+            className="calendar-month-button"
+            onClick={() => chanceMonthCalendar("former")}
+          >
+            <SlArrowLeft />
           </div>
-          <div className="icons-days-name">
-            {dayNames.map((dayName, index) => (
-              <h2 key={index}>
-                {calendarState === "second" ? dayName.slice(0, 2) : dayName}
-              </h2>
-            ))}
-          </div>
-          <div className="calendar-days">
-            {infoCalendar?.map(({ dayNumber, type }, index) => {
-              const isNotAllowed =
-                yearChance !== year ||
-                month > monthChance ||
-                (month === monthChance &&
-                  dayOfMonth > dayNumber &&
-                  type !== "next") ||
-                (month === monthChance && type === "former");
-
-              const handleClick = () => {
-                if (isNotAllowed) return;
-
-                if (type === "former" || type === "next") {
-                  chanceMonthCalendar(type);
-                } else {
-                  reservations &&
-                    reservations[dayNumber] &&
-                    !isNotAllowed &&
-                    openNextPart(dayNumber);
-                }
-              };
-
-              const classNames = [
-                isNotAllowed ? "not-allowed" : type,
-                dayOfMonth === dayNumber && month === monthChance
-                  ? "to-day"
-                  : "",
-              ]
-                .filter(Boolean)
-                .join(" ");
-
-              return (
-                <div
-                  key={index}
-                  onClick={isNotAllowed ? null : handleClick}
-                  className={classNames}
-                >
-                  {dayNumber}
-
-                  {reservations &&
-                    reservations[dayNumber] &&
-                    !isNotAllowed &&
-                    type === "current" && <div>existe</div>}
-                </div>
-              );
-            })}
+          <h2>{monthsNames[monthChance]}</h2>
+          <div
+            className="calendar-month-button"
+            onClick={() => chanceMonthCalendar("next")}
+          >
+            <SlArrowRight />
           </div>
         </div>
-        <div className="reservations">
-          {reservations &&
-            calendarStateId &&
-            reservations[calendarStateId] &&
-            Object.values(reservations[calendarStateId][0]).map(
-              (item, index) => (
-                <div className="reservation" key={index}>
-                  <div>
-                    <BiUserMinus />
-                    <BiUserPlus />
-                    <BiUserCheck />
-                  </div>
-                  <h2>{item.personalInformation.nameClient}</h2>
-                  <div>
-                    <h2>datos personales</h2>
-                    <h3>{item.personalInformation.phoneClient}</h3>
-                  </div>
-                  <div>
-                    <div>{item.placeAndPeople.time}</div>
-                    <div>{item.placeAndPeople.people}</div>
-                    <div>{item.placeAndPeople.place}</div>
-                  </div>
-                  <div>{item.personalInformation.mailClient}</div>
-                </div>
-              )
-            )}
+        <div className="icons-days-name">
+          {dayNames.map((dayName, index) => (
+            <h2 key={index}>
+              {calendarState === "second" ? dayName.slice(0, 2) : dayName}
+            </h2>
+          ))}
         </div>
+        <div className="calendar-days">
+          {infoCalendar?.map(({ dayNumber, type }, index) => {
+            const isNotAllowed =
+              yearChance !== year ||
+              month > monthChance ||
+              (month === monthChance &&
+                dayOfMonth > dayNumber &&
+                type !== "next") ||
+              (month === monthChance && type === "former");
+
+            const handleClick = () => {
+              if (isNotAllowed) return;
+
+              if (type === "former" || type === "next") {
+                chanceMonthCalendar(type);
+              } else {
+                reservations &&
+                  reservations[dayNumber] &&
+                  !isNotAllowed &&
+                  openNextPart(dayNumber);
+              }
+            };
+
+            const classNames = [
+              isNotAllowed ? "not-allowed" : type,
+              dayOfMonth === dayNumber && month === monthChance ? "to-day" : "",
+            ]
+              .filter(Boolean)
+              .join(" ");
+
+            return (
+              <div
+                key={index}
+                onClick={isNotAllowed ? null : handleClick}
+                className={classNames}
+              >
+                {dayNumber}
+
+                {reservations &&
+                  reservations[dayNumber] &&
+                  !isNotAllowed &&
+                  type === "current" && <div>existe</div>}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <div className="reservations">
+        {reservations &&
+          calendarStateId &&
+          reservations[calendarStateId] &&
+          Object.values(reservations[calendarStateId][0]).map((item, index) => (
+            <div className="reservation" key={index}>
+              <div className="edit-reservation">
+                <BiUserMinus />
+                <BiUserPlus />
+                <BiUserCheck />
+              </div>
+              <h2>{item.personalInformation.nameClient}</h2>
+              <div>
+                <h3>{item.personalInformation.phoneClient}</h3>
+              </div>
+              <div>
+                <div>{item.placeAndPeople.time}</div>
+                <div>{item.placeAndPeople.people}</div>
+                <div>{item.placeAndPeople.place}</div>
+              </div>
+              <div>{item.personalInformation.mailClient}</div>
+            </div>
+          ))}
       </div>
     </div>
   );

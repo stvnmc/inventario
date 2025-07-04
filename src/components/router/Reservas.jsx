@@ -109,6 +109,16 @@ function Reservas() {
     setCalendar(!calendar);
   };
 
+  // create new reservation again
+
+  const createNewReservation = () => {
+    setNameOfStateForm(null);
+    setPhoneOfStateForm(null);
+    setMailOfStateForm(null);
+
+    setSections("placeAndPeople");
+  };
+
   // form funticion
 
   const handleSubmit = async (e) => {
@@ -129,7 +139,6 @@ function Reservas() {
       });
       return;
     }
-    console.log(responseReservation);
     setSections("personalInformation");
   };
 
@@ -299,18 +308,18 @@ function Reservas() {
       );
     if (sections === "confirmInformation")
       return (
-        <div>
-          <div>
-            <h2>lugar : {placeAndPeople.place}</h2>
-            <h2>personas : {placeAndPeople.people}</h2>
-            <h2>hora : {placeAndPeople.time}</h2>
-          </div>
-          <div>
-            <h2>nombre:{personalInformation.nameClient}</h2>
-            <h2>numero:{personalInformation.phoneClient}</h2>
+        <div className="cont-confirm-information">
+          <div className="cont-personal-info">
+            <h2>Nombre : {personalInformation.nameClient}</h2>
+            <h2>Numero : {personalInformation.phoneClient}</h2>
             {personalInformation.mailClient ? (
-              <h2>mail:{personalInformation.mailClient}</h2>
+              <h2>Mail : {personalInformation.mailClient}</h2>
             ) : null}
+          </div>
+            <div className="cont-place-time-person-info">
+            <h2>Lugar : {placeAndPeople.place}</h2>
+            <h2>Personas : {placeAndPeople.people}</h2>
+            <h2>Hora : {placeAndPeople.time}</h2>
           </div>
 
           <button onClick={confirmInformation}>confirmar reserva</button>
@@ -320,6 +329,8 @@ function Reservas() {
       return (
         <div>
           <h2>mira el menu y busca tu mejor obtxcion</h2>
+
+          <button onClick={createNewReservation}>crear otra reservacion</button>
 
           <Link to={"/inventario/Menu"}>
             <h1>Menu</h1>
@@ -391,9 +402,9 @@ function Reservas() {
           <div className="cont-form-more">
             <h1 className="h1-reservations">Personaliza tu reserva</h1>
 
-            <div>{stateSections()}</div>
+            {stateSections()}
 
-            {sections !== "placeAndPeople" ? (
+            {sections !== "placeAndPeople" && sections !== "finish" ? (
               <div onClick={goBackForm}>
                 <MdArrowBackIosNew />
               </div>

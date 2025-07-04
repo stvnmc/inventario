@@ -491,15 +491,18 @@ label {
 //////////////////// */
 
 main {
-  background-color: #333;
   width: 100%;
+  height: 80vh;
 }
 
 .dashboard-main {
+  background-color: #333;
   display: flex;
-  min-height: 100vh;
+  min-height: 15vh;
+  flex-wrap: wrap;
+  align-content: flex-start;
   justify-content: flex-start;
-  margin: 2vh 11vw;
+  margin: 2vh 2vw;
   align-items: flex-start;
   position: relative;
 }
@@ -1031,7 +1034,7 @@ main {
   width: 45%;
   display: flex;
   min-width: 800px;
-  height: 690px;
+  height: 700px;
   padding: 1px 20px;
   align-items: center;
   flex-direction: column;
@@ -1141,6 +1144,7 @@ select:focus {
 .cont-map-img-reservatons {
   display: flex;
   width: 96vw;
+  height: 180vh;
   flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
@@ -1382,14 +1386,14 @@ select::-webkit-scrollbar-thumb {
 .form-rerservation-confirm {
   height: 55vh;
   min-height: 479px;
-  min-width: 800px;
+  min-width: 363px;
   width: 35vw;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   border: 1px solid #ffffff1a;
   border-radius: 5px;
-  padding: 34px;
+  padding: 30px;
   transition: 0.5s;
   background-color: #181919;
 }
@@ -1428,7 +1432,7 @@ select::-webkit-scrollbar-thumb {
 }
 
 .cont-input-nombre-reserva input {
-  width: 70%;
+  width: 100%;
   color: #807871;
 }
 
@@ -1446,12 +1450,12 @@ select::-webkit-scrollbar-thumb {
   flex-direction: column;
   justify-content: space-between;
   height: 90%;
-  width: 60%;
+  width: 63%;
 }
 
 .cont-input-nombre-reserva-correo input,
 .cont-input-nombre-reserva-telefono input {
-  width: 65%;
+  width: 80%;
   height: 32px;
   color: #807871;
 }
@@ -1495,6 +1499,32 @@ select::-webkit-scrollbar-thumb {
   transition: 0.5s;
 }
 
+/* ///////////////// //////// ////////  confir reservation //////// //////// //////// //////// */
+
+.cont-confirm-information {
+  border: 1px solid #ffffff38;
+  padding: 30px;
+  width: 40vw;
+}
+
+.cont-personal-info h2,
+.cont-place-time-person-info h2 {
+  padding: 5px 7px;
+}
+
+.cont-place-time-person-info {
+}
+
+.cont-confirm-information button {
+  width: 168px;
+  height: 47px;
+  border: 1px solid #ffffff38;
+  background-color: transparent;
+  color: #fff;
+  font-size: 17px;
+  margin-top: 32px;
+}
+
 /* others */
 
 .others {
@@ -1526,6 +1556,7 @@ select::-webkit-scrollbar-thumb {
 //////////////////// */
 .adminReservation {
   display: flex;
+  padding: 10px;
 }
 
 .adminReservation .calendar {
@@ -1541,7 +1572,7 @@ select::-webkit-scrollbar-thumb {
   width: 100%;
 }
 .adminReservation .icons-days-name h2 {
-  padding: 0 3.7%;
+  padding: 0;
 }
 
 .adminReservation .calendar-days {
@@ -1553,7 +1584,8 @@ select::-webkit-scrollbar-thumb {
 }
 
 .calendar.close {
-  width: 16vw;
+  width: 21vw;
+  min-width: 203px;
   height: 25vh;
 }
 
@@ -1568,11 +1600,31 @@ select::-webkit-scrollbar-thumb {
 //////////////////// */
 
 .reservations {
-  height: 60vh;
   width: 60vw;
 }
-.reservation{
+
+.reservation {
   margin: 2vh 2vw;
+  position: relative;
+  width: 35vw;
+  max-width: 378px;
+}
+
+.edit-reservation {
+  position: absolute;
+  bottom: 1px;
+  right: 7px;
+}
+
+.edit-reservation svg {
+  font-size: 20px;
+  cursor: pointer;
+  margin: 4px;
+  transition: 0.4s;
+}
+.edit-reservation svg:hover {
+  color: #634e4e;
+  font-size: 25px;
 }
 
 /*/ ///////
@@ -1736,7 +1788,6 @@ footer .linea-long {
 
 @media (max-width: 1400px) {
   .cont-map-img-reservatons {
-    flex-direction: column;
     align-items: center;
   }
 
@@ -1770,7 +1821,10 @@ footer .linea-long {
     height: 31px;
   }
   .form-rerservation-confirm {
-    width: 60vw;
+    width: 95%;
+  }
+  .cont-confirm-information {
+    width: 85vw;
   }
 }
 
