@@ -5,6 +5,7 @@ import { BiUserMinus } from "react-icons/bi";
 import { BiUserPlus } from "react-icons/bi";
 import { BiUserCheck } from "react-icons/bi";
 import { MdArrowBackIosNew } from "react-icons/md";
+import { SlSizeFullscreen } from "react-icons/sl";
 import {
   dayNames,
   dayOfMonth,
@@ -71,6 +72,10 @@ const AdminReservation = ({ setSite }) => {
     setCalendarState("second");
     setCalendarStateId(e);
   };
+  const openCalendar = () => {
+    setCalendarState("open");
+    setCalendarStateId(null);
+  };
 
   return (
     <div className="adminReservation">
@@ -78,6 +83,7 @@ const AdminReservation = ({ setSite }) => {
         <MdArrowBackIosNew onClick={() => setSite("dashboard")} />
       </div>
       <div className={`calendar ${calendarState === "second" ? "close" : ""}`}>
+        <SlSizeFullscreen onClick={openCalendar} />
         <div className="calendar-month">
           <div
             className="calendar-month-button"
@@ -147,7 +153,9 @@ const AdminReservation = ({ setSite }) => {
           })}
         </div>
       </div>
-      <div className="reservations">
+      <div
+        className={`reservations ${calendarState === "second" ? "" : "close"}`}
+      >
         {reservations &&
           calendarStateId &&
           reservations[calendarStateId] &&

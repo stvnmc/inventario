@@ -5,7 +5,7 @@ import { BsPersonFill } from "react-icons/bs";
 import { IoTimeOutline } from "react-icons/io5";
 import { FaPhone } from "react-icons/fa6";
 import Calendario from "../componentsReservation/calendario";
-import { MdArrowBackIosNew } from "react-icons/md";
+import { MdArrowBack } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useReservations } from "../../context/ReservationContext";
 
@@ -242,7 +242,9 @@ function Reservas() {
           <div className="button-reservas-continue">
             <button>Reservar</button>
           </div>
-          <h2>{error.name === "first" ? error.textError : null}</h2>
+          <h2 className="error">
+            {error.name === "first" ? error.textError : null}
+          </h2>
         </form>
       );
     if (sections === "personalInformation")
@@ -316,7 +318,7 @@ function Reservas() {
               <h2>Mail : {personalInformation.mailClient}</h2>
             ) : null}
           </div>
-            <div className="cont-place-time-person-info">
+          <div className="cont-place-time-person-info">
             <h2>Lugar : {placeAndPeople.place}</h2>
             <h2>Personas : {placeAndPeople.people}</h2>
             <h2>Hora : {placeAndPeople.time}</h2>
@@ -327,14 +329,16 @@ function Reservas() {
       );
     if (sections === "finish")
       return (
-        <div>
-          <h2>mira el menu y busca tu mejor obtxcion</h2>
-
-          <button onClick={createNewReservation}>crear otra reservacion</button>
+        <div className="finist-reservations">
+          <h2>Mira el menu y busca tu mejor opción</h2>
 
           <Link to={"/inventario/Menu"}>
-            <h1>Menu</h1>
+            <button>
+              <h2>Menu</h2>
+            </button>
           </Link>
+
+          <button onClick={createNewReservation}>Crear otra reservacion</button>
         </div>
       );
   };
@@ -400,16 +404,15 @@ function Reservas() {
           {/* second part */}
 
           <div className="cont-form-more">
-            <h1 className="h1-reservations">Personaliza tu reserva</h1>
-
-            {stateSections()}
-
+            {sections !== "finish" && (
+              <h1 className="h1-reservations">Personaliza tu reserva</h1>
+            )}
             {sections !== "placeAndPeople" && sections !== "finish" ? (
-              <div onClick={goBackForm}>
-                <MdArrowBackIosNew />
+              <div className="go-back-form-reservation" onClick={goBackForm}>
+                <MdArrowBack />
               </div>
             ) : null}
-
+            {stateSections()}
             <div className="information">
               <h2>Pedir comida a domicilio o para llevar</h2>
               <div>
