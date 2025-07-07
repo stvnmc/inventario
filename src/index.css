@@ -1224,6 +1224,14 @@ select option {
   z-index: 1;
 }
 
+.cont-icon-full-scrim {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-size: 0;
+  cursor: pointer;
+}
+
 .calendar h2 {
   font-size: 16px;
   margin: 0 3px;
@@ -1232,12 +1240,18 @@ select option {
 .calendar-month {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
   margin-bottom: 6px;
+}
+
+.calendar-month h2 {
+  font-size: 40px;
+  margin: 0 40px;
 }
 
 .calendar-month-button {
   cursor: pointer;
+  font-size: 30px;
 }
 
 .calendar-days {
@@ -1294,8 +1308,10 @@ select option {
 }
 
 .icons-days-name {
-  display: flex;
-  align-items: center;
+  display: grid;
+  gap: 0% 0%;
+  grid-template-columns: repeat(7, 14.3%);
+  justify-items: center;
 }
 
 .icons-days-name h2 {
@@ -1590,12 +1606,10 @@ select::-webkit-scrollbar-thumb {
 
 .adminReservation .calendar {
   position: relative;
-  height: 60vh;
-  width: 80vw;
+  height: 74vh;
+  width: 86vw;
+  max-width: 1368px;
   transition: 1s;
-}
-
-.adminReservation .calendar-days {
 }
 
 .adminReservation .icons-days-name {
@@ -1607,20 +1621,48 @@ select::-webkit-scrollbar-thumb {
 
 .adminReservation .calendar-days {
   display: grid;
-  height: 184px;
+  height: 60vh;
   gap: 0% 0%;
   grid-template-columns: repeat(7, 14.3%);
   grid-template-rows: repeat(6, 16.5%);
 }
 
+/*/ ///////
+///////////////
+/////////////////////// close //////////
+///////////////
+//////////////////// */
+
 .calendar.close {
   width: 21vw;
   min-width: 203px;
   height: 25vh;
+  min-height: 232px;
+  padding: 25px 13px;
 }
 
 .calendar.close .icons-days-name h2 {
   padding: 0 1.5%;
+}
+
+.calendar.close .calendar-days {
+  height: 20vh;
+  max-height: 173px;
+}
+
+.calendar.close .calendar-month h2 {
+  font-size: 20px;
+}
+.calendar.close .calendar-month .calendar-month-button svg {
+  font-size: 22px;
+}
+
+.calendar.close .cont-icon-full-scrim {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  cursor: pointer;
+  font-size: 17px;
 }
 
 /*/ ///////

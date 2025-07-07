@@ -83,7 +83,9 @@ const AdminReservation = ({ setSite }) => {
         <MdArrowBackIosNew onClick={() => setSite("dashboard")} />
       </div>
       <div className={`calendar ${calendarState === "second" ? "close" : ""}`}>
-        <SlSizeFullscreen onClick={openCalendar} />
+        <div className="cont-icon-full-scrim">
+          <SlSizeFullscreen onClick={openCalendar} />
+        </div>
         <div className="calendar-month">
           <div
             className="calendar-month-button"
