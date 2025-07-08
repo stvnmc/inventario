@@ -6,6 +6,7 @@ import { BiUserPlus } from "react-icons/bi";
 import { BiUserCheck } from "react-icons/bi";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { SlSizeFullscreen } from "react-icons/sl";
+import { FaRegStar } from "react-icons/fa";
 import {
   dayNames,
   dayOfMonth,
@@ -18,7 +19,8 @@ import { useAdminReservation } from "../../context/AdminReservationContext.jsx";
 
 const AdminReservation = ({ setSite }) => {
   //context
-  const { getAllReservationsOfMonth, reservations } = useAdminReservation();
+  const { getAllReservationsOfMonth, reservations, deletedReservations } =
+    useAdminReservation();
   // state
   const [infoCalendar, setInfoCalendar] = useState([]);
   const [monthChance, setMonthChance] = useState(new Date().getMonth() + 1);
@@ -144,12 +146,12 @@ const AdminReservation = ({ setSite }) => {
                 onClick={isNotAllowed ? null : handleClick}
                 className={classNames}
               >
-                {dayNumber}
+                <h2>{dayNumber}</h2>
 
                 {reservations &&
                   reservations[dayNumber] &&
                   !isNotAllowed &&
-                  type === "current" && <div>existe</div>}
+                  type === "current" && <FaRegStar />}
               </div>
             );
           })}
@@ -164,9 +166,16 @@ const AdminReservation = ({ setSite }) => {
           Object.values(reservations[calendarStateId][0]).map((item, index) => (
             <div className="reservation" key={index}>
               <div className="edit-reservation">
-                <BiUserMinus />
-                <BiUserPlus />
-                <BiUserCheck />
+                <button>
+                  <BiUserCheck />
+                </button>
+                <button>
+                  <BiUserPlus />
+                </button>
+
+                <button onClick={deletedReservations}>
+                  <BiUserMinus />
+                </button>
               </div>
               <h2>{item.personalInformation.nameClient}</h2>
               <div>

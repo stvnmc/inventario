@@ -492,7 +492,8 @@ label {
 
 main {
   width: 100%;
-  min-height: 80vh;
+  height: 80vh;
+  min-height: 520px;
 }
 
 .dashboard-main {
@@ -1286,11 +1287,24 @@ select option {
 }
 
 .calendar-days div {
+  position: relative;
   border: solid 1px #fff;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.calendar-days h2 {
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.calendar-days div svg {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  color: #ded117;
 }
 
 .calendar button {
@@ -1609,14 +1623,20 @@ select::-webkit-scrollbar-thumb {
   height: 74vh;
   width: 86vw;
   max-width: 1368px;
+  min-height: 427px;
+  max-height: 682px;
   transition: 1s;
 }
 
 .adminReservation .icons-days-name {
   width: 100%;
+  margin-bottom: 11px;
 }
+
 .adminReservation .icons-days-name h2 {
   padding: 0;
+  font-size: 23px;
+  font-weight: 500;
 }
 
 .adminReservation .calendar-days {
@@ -1637,7 +1657,7 @@ select::-webkit-scrollbar-thumb {
   width: 21vw;
   min-width: 203px;
   height: 25vh;
-  min-height: 232px;
+  min-height: 251px;
   padding: 25px 13px;
 }
 
@@ -1647,6 +1667,7 @@ select::-webkit-scrollbar-thumb {
 
 .calendar.close .calendar-days {
   height: 20vh;
+  min-height: 164px;
   max-height: 173px;
 }
 
@@ -1663,6 +1684,16 @@ select::-webkit-scrollbar-thumb {
   right: 6px;
   cursor: pointer;
   font-size: 17px;
+}
+
+.calendar.close .calendar-days h2 {
+  font-size: 14px;
+  font-weight: 300;
+}
+
+.calendar.close .icons-days-name h2 {
+  font-size: 16px;
+  font-weight: 300;
 }
 
 /*/ ///////
