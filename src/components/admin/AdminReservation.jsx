@@ -68,6 +68,16 @@ const AdminReservation = ({ setSite }) => {
     await getAllReservationsOfMonth(monthChance, yearChance);
   };
 
+  const deletedAdminReservations = async (index, hour) => {
+    await deletedReservations(
+      monthChance,
+      yearChance,
+      calendarStateId,
+      index,
+      hour
+    );
+  };
+
   // funtion
 
   const openNextPart = (e) => {
@@ -173,7 +183,11 @@ const AdminReservation = ({ setSite }) => {
                   <BiUserPlus />
                 </button>
 
-                <button onClick={deletedReservations}>
+                <button
+                  onClick={() =>
+                    deletedAdminReservations(index, item.placeAndPeople.time)
+                  }
+                >
                   <BiUserMinus />
                 </button>
               </div>
