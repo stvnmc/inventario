@@ -48,11 +48,6 @@ export const ReservartionsProvider = ({ children }) => {
   });
 
   // fuction
-
-  useEffect(() => {
-    console.log(idReservation);
-  }, [idReservation]);
-
   async function dateOfReservation(date, allInfoCalendar) {
     setPlaceAndPeople({
       place: date.place,

@@ -1,4 +1,11 @@
-import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+} from "firebase/firestore";
 import { createContext, useContext, useState } from "react";
 import { db } from "../firebase/config";
 
@@ -26,14 +33,13 @@ export const AdminReservationProvider = ({ children }) => {
     const monthDocSnap = await getDoc(monthDocRef);
 
     if (!monthDocSnap.exists()) {
-      setReservations(); // Podrías pasar null o {} si es necesario
+      setReservations();
       return;
     }
 
     const days = monthDocSnap.data().days;
     const allReservations = {};
 
-    // Creamos un array de promesas
     const promises = days.map(async (day) => {
       const ref = collection(db, "reservation", monthYear, day);
       const snapshot = await getDocs(ref);
@@ -53,72 +59,64 @@ export const AdminReservationProvider = ({ children }) => {
     results.forEach(({ day, reservations }) => {
       allReservations[day] = reservations;
     });
-
     setReservations(allReservations);
-    console.log(allReservations);
   }
 
   async function deletedReservations(month, year, day, user, hour) {
-    const monthYear = `${month}-${year}`;
+    const reservationsUpdate = [];
 
-    console.log(monthYear, day, hour);
-    const hourDocRef = doc(db, "reservation", monthYear, day.toString(), hour);
+    const dayReservations = reservations[day][0];
 
-    const updatedData = {};
-
-    console.log(reservations[day]);
-
-    // updatedData[index] = item;
-    reservations[day].forEach((item, index) => {
-      console.log(index, item[user]);
+    Object.entries(dayReservations).forEach(([index, item]) => {
+      if (parseInt(index) !== user) {
+        reservationsUpdate.push({ ...item });
+      }
     });
 
-    // await setDoc(hourDocRef, updatedData);
+    const reservationsUpdateObj = {};
+    reservationsUpdate.forEach((item, index) => {
+      reservationsUpdateObj[index] = item;
+    });
 
-    // console.log(updatedData);
-    // console.log(reservations);
+    const dayDocRef = doc(
+      db,
+      "reservation",
+      `${month}-${year}`,
+      day.toString(),
+      hour.toString()
+    );
+    await setDoc(dayDocRef, reservationsUpdateObj);
 
-    // setReservations((prev) => ({
-    //   ...prev,
-    //   day: prev[day].filter((_, index) => index !== user),
-    // }));
+    console.log(reservationsUpdate.length);
+    if (reservationsUpdate.length === 0) {
+      await deletedDayCalendar(month, year, day);
+    }
 
-    // const monthYear = `${month}-${year}`;
-
-    // const allReservations = {};
-
-    // if (user === 0) {
-    //   return setReservations();
-    // }
-
-    // const ref = collection(db, "reservation", monthYear, dayy.toString());
-    // const snapshot = await getDocs(ref);
-
-    // const reservations = [];
-
-    // snapshot.forEach((doc) => {
-    //   console.log(doc.data()[user]);
-
-    //   if (doc.data()[user]) {
-    //     reservations.push({ ...doc.data() });
-    //   }
-    // });
-
-    // console.log(reservations);
-
-    // allReservations[day] = reservations;
-
-    // const reservations = [];
-
-    // snapshot.forEach((doc) => {
-    //   reservations.push({ ...doc.data() });
-    // });
-
-    // allReservations[day] = reservations;
+    await getAllReservationsOfMonth(month, year);
 
     return;
   }
 
+  async function deletedDayCalendar(month, year, day) {
+    const monthYear = `${month}-${year}`;
+
+    const dayDocRef = doc(db, "reservation", monthYear);
+    const dayDocSnap = await getDoc(dayDocRef);
+
+    const data = dayDocSnap.data();
+    const days = data.days;
+
+    const reservationsDayUpdate = [];
+
+    days.map((iteam) => {
+      if (iteam !== day.toString()) {
+        reservationsDayUpdate.push(iteam);
+      }
+    });
+    await setDoc(dayDocRef, {
+      days: reservationsDayUpdate,
+    });
+  }
   return (
     <AdminReservationContext.Provider
       value={{ getAllReservationsOfMonth, reservations, deletedReservations }}
