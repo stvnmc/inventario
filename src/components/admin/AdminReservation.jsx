@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { SlArrowRight, SlArrowLeft } from "react-icons/sl";
-import { BiUserMinus } from "react-icons/bi";
-import { BiUserPlus } from "react-icons/bi";
-import { BiUserCheck } from "react-icons/bi";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { SlSizeFullscreen } from "react-icons/sl";
 import { FaRegStar } from "react-icons/fa";
@@ -16,11 +14,14 @@ import {
   year,
 } from "../../infoPage/GetCalendar.js";
 import { useAdminReservation } from "../../context/AdminReservationContext.jsx";
+import Reservation from "./componentsReservationAdmin/Reservation.jsx";
+import { Await } from "react-router-dom";
 
 const AdminReservation = ({ setSite }) => {
   //context
   const { getAllReservationsOfMonth, reservations, deletedReservations } =
     useAdminReservation();
+
   // state
   const [infoCalendar, setInfoCalendar] = useState([]);
   const [monthChance, setMonthChance] = useState(new Date().getMonth() + 1);
@@ -30,25 +31,24 @@ const AdminReservation = ({ setSite }) => {
 
   const [calendarState, setCalendarState] = useState("open");
   const [calendarStateId, setCalendarStateId] = useState(null);
+  const [showCalendar, setShowCalendar] = useState(false);
+
+  //useEffect
+
+  useEffect(() => {
+    getInfoCalendarAndgetCalendarDays();
+  }, []);
+
+  // funtion info page
 
   const getCalendar = async () => {
     const calendarInfo = await getInfoCalendar(monthChance, dayOfMonth);
     setInfoCalendar(calendarInfo);
   };
 
-  //useEffect
+  const chanceMonthCalendar = async (e) => {
+    await getInfoCalendarAndgetCalendarDays();
 
-  useEffect(() => {
-    getCalendar(monthChance);
-    getInfoAdminReservation();
-  }, [monthChance]);
-
-  useEffect(() => {
-    console.log(calendarStateId);
-    console.log(reservations);
-  }, [reservations]);
-
-  const chanceMonthCalendar = (e) => {
     setMonthChance((prev) => {
       if (prev === 11 && e === "next") {
         setYearChance(yearChance + 1);
@@ -60,6 +60,17 @@ const AdminReservation = ({ setSite }) => {
       }
       return e === "former" ? prev - 1 : prev + 1;
     });
+  };
+
+  // getcalendar
+
+  const getInfoCalendarAndgetCalendarDays = async () => {
+    setShowCalendar(false);
+    await getInfoAdminReservation();
+    await getCalendar(monthChance);
+
+    setShowCalendar(true);
+    return;
   };
 
   // context calendar
@@ -87,6 +98,63 @@ const AdminReservation = ({ setSite }) => {
   const openCalendar = () => {
     setCalendarState("open");
     setCalendarStateId(null);
+  };
+
+  // show day calendar
+
+  const dayCalendarShow = () => {
+    return infoCalendar?.map(({ dayNumber, type }, index) => {
+      const isNotAllowed =
+        yearChance !== year ||
+        month > monthChance ||
+        (month === monthChance && dayOfMonth > dayNumber && type !== "next") ||
+        (month === monthChance && type === "former");
+
+      const handleClick = () => {
+        if (isNotAllowed) return;
+
+        if (type === "former" || type === "next") {
+          chanceMonthCalendar(type);
+        } else {
+          reservations &&
+            reservations[dayNumber] &&
+            !isNotAllowed &&
+            openNextPart(dayNumber);
+        }
+      };
+
+      const classNames = [
+        isNotAllowed ? "not-allowed" : type,
+        dayOfMonth === dayNumber && month === monthChance ? "to-day" : "",
+      ]
+        .filter(Boolean)
+        .join(" ");
+
+      const isDayValid =
+        !isNotAllowed &&
+        type === "current" &&
+        reservations &&
+        reservations[dayNumber];
+
+      return (
+        <div
+          key={index}
+          onClick={isNotAllowed ? null : handleClick}
+          className={showCalendar ? classNames : null}
+        >
+          {showCalendar ? (
+            <>
+              <h2>{dayNumber}</h2>
+              {isDayValid ? <FaRegStar /> : null}
+            </>
+          ) : (
+            <div className="icon-loading">
+              <AiOutlineLoading3Quarters />
+            </div>
+          )}
+        </div>
+      );
+    });
   };
 
   return (
@@ -120,90 +188,23 @@ const AdminReservation = ({ setSite }) => {
             </h2>
           ))}
         </div>
-        <div className="calendar-days">
-          {infoCalendar?.map(({ dayNumber, type }, index) => {
-            const isNotAllowed =
-              yearChance !== year ||
-              month > monthChance ||
-              (month === monthChance &&
-                dayOfMonth > dayNumber &&
-                type !== "next") ||
-              (month === monthChance && type === "former");
 
-            const handleClick = () => {
-              if (isNotAllowed) return;
-
-              if (type === "former" || type === "next") {
-                chanceMonthCalendar(type);
-              } else {
-                reservations &&
-                  reservations[dayNumber] &&
-                  !isNotAllowed &&
-                  openNextPart(dayNumber);
-              }
-            };
-
-            const classNames = [
-              isNotAllowed ? "not-allowed" : type,
-              dayOfMonth === dayNumber && month === monthChance ? "to-day" : "",
-            ]
-              .filter(Boolean)
-              .join(" ");
-
-            return (
-              <div
-                key={index}
-                onClick={isNotAllowed ? null : handleClick}
-                className={classNames}
-              >
-                <h2>{dayNumber}</h2>
-
-                {reservations &&
-                  reservations[dayNumber] &&
-                  !isNotAllowed &&
-                  type === "current" && <FaRegStar />}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      <div
-        className={`reservations ${calendarState === "second" ? "" : "close"}`}
-      >
-        {reservations &&
-          calendarStateId &&
-          reservations[calendarStateId] &&
-          Object.values(reservations[calendarStateId][0]).map((item, index) => (
-            <div className="reservation" key={index}>
-              <div className="edit-reservation">
-                <button>
-                  <BiUserCheck />
-                </button>
-                <button>
-                  <BiUserPlus />
-                </button>
-
-                <button
-                  onClick={() =>
-                    deletedAdminReservations(index, item.placeAndPeople.time)
-                  }
-                >
-                  <BiUserMinus />
-                </button>
-              </div>
-              <h2>{item.personalInformation.nameClient}</h2>
-              <div>
-                <h3>{item.personalInformation.phoneClient}</h3>
-              </div>
-              <div>
-                <div>{item.placeAndPeople.time}</div>
-                <div>{item.placeAndPeople.people}</div>
-                <div>{item.placeAndPeople.place}</div>
-              </div>
-              <div>{item.personalInformation.mailClient}</div>
+        {infoCalendar && infoCalendar.length > 0 ? (
+          <div className="calendar-days">{dayCalendarShow()}</div>
+        ) : (
+          <div className="loading-message">
+            <div className="icon-loading">
+              <AiOutlineLoading3Quarters />
             </div>
-          ))}
+          </div>
+        )}
       </div>
+      <Reservation
+        calendarState={calendarState}
+        reservations={reservations}
+        calendarStateId={calendarStateId}
+        deletedAdminReservations={deletedAdminReservations}
+      />
     </div>
   );
 };

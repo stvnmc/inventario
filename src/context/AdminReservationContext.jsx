@@ -52,14 +52,13 @@ export const AdminReservationProvider = ({ children }) => {
       return { day, reservations };
     });
 
-    // Ejecutamos todas las lecturas en paralelo
     const results = await Promise.all(promises);
 
-    // Convertimos el array a un objeto
     results.forEach(({ day, reservations }) => {
       allReservations[day] = reservations;
     });
     setReservations(allReservations);
+    return;
   }
 
   async function deletedReservations(month, year, day, user, hour) {
@@ -117,6 +116,7 @@ export const AdminReservationProvider = ({ children }) => {
       days: reservationsDayUpdate,
     });
   }
+
   return (
     <AdminReservationContext.Provider
       value={{ getAllReservationsOfMonth, reservations, deletedReservations }}
