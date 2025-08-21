@@ -14,11 +14,51 @@ const Reservation = ({
   };
 
   const [showEditform, setShowEditform] = useState(true);
+  const [confirmSaveReservation, setConfirmSaveReservation] = useState(true);
   const [indexShow, setindexShow] = useState(null);
+  const [formData, setFormData] = useState({
+    nameClient: "",
+    phoneClient: "",
+    time: "",
+    people: "",
+    place: "",
+    mailClient: "",
+  });
 
-  const openEditReservation = (index) => {
+  const openEditReservation = async (index, item) => {
+    if (null !== indexShow)
+      if (index !== indexShow) {
+        console.log("no enrra");
+        closeFormReservation();
+        return;
+      }
+
+    console.log(index);
+    console.log(indexShow);
+
+    setFormData({
+      nameClient: item.personalInformation.nameClient || "",
+      phoneClient: item.personalInformation.phoneClient || "",
+      time: item.placeAndPeople.time || "",
+      people: item.placeAndPeople.people || "",
+      place: item.placeAndPeople.place || "",
+      mailClient: item.personalInformation.mailClient || "",
+    });
     setindexShow(index);
-    setShowEditform(!showEditform);
+    setShowEditform(true);
+  };
+
+  //
+
+  const closeFormReservation = async () => {
+    setindexShow(null);
+    setConfirmSaveReservation(false);
+  };
+
+  const saveEdictReservation = () => {
+    console.log("save");
+    setConfirmSaveReservation(false);
+    closeFormReservation(false);
   };
 
   return (
@@ -30,47 +70,87 @@ const Reservation = ({
         reservations[calendarStateId] &&
         Object.values(reservations[calendarStateId][0]).map((item, index) => (
           <div className="reservation" key={index}>
-            <div className="edit-reservation">
-              <button>
-                <BiUserCheck />
-              </button>
-              <button onClick={() => openEditReservation(index)}>
-                <BiUserPlus />
-              </button>
-
-              <button
-                onClick={() =>
-                  deletedAdminReservations(index, item.placeAndPeople.time)
-                }
-              >
-                <BiUserMinus />
-              </button>
-            </div>
             {showEditform && index === indexShow ? (
-              <form>
-                <h2>name</h2>
-                <input value={item.personalInformation.nameClient}></input>
-                <div>
-                  <h3>phone</h3>
-                  <input value={item.personalInformation.phoneClient}></input>
-                </div>
-                <div>
-                  <div>time</div>
-                  <input value={item.placeAndPeople.time}></input>
-                  <div>people</div>
-                  <input value={item.placeAndPeople.people}></input>
-                  <div>place</div>
-                  <input value={item.placeAndPeople.place}></input>
-                  {item.personalInformation.mailClient ? (
-                    <>
-                      <div>gmail</div>
+              confirmSaveReservation ? (
+                <>
+                  <div className="edit-reservation">
+                    <button>
+                      <BiUserCheck onClick={saveEdictReservation} />
+                    </button>
+                  </div>
+                  <form>
+                    <h2>name</h2>
+                    <input
+                      name="nameClient"
+                      placeholder="Nombre Completo"
+                      value={formData.nameClient}
+                      onChange={(e) =>
+                        setFormData({ ...formData, nameClient: e.target.value })
+                      }
+                    />
+                    <div>
+                      <h3>phone</h3>
                       <input
-                        value={item.personalInformation.mailClient}
-                      ></input>
-                    </>
-                  ) : null}
+                        name="phoneClient"
+                        value={formData.phoneClient}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            phoneClient: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div>
+                      <div>time</div>
+                      <input
+                        name="time"
+                        value={formData.time}
+                        onChange={(e) =>
+                          setFormData({ ...formData, time: e.target.value })
+                        }
+                      />
+                      <div>people</div>
+                      <input
+                        name="people"
+                        value={formData.people}
+                        onChange={(e) =>
+                          setFormData({ ...formData, people: e.target.value })
+                        }
+                      />
+                      <div>place</div>
+                      <input
+                        name="phoneClient"
+                        value={formData.place}
+                        onChange={(e) =>
+                          setFormData({ ...formData, place: e.target.value })
+                        }
+                      />
+                      {item.personalInformation.mailClient ? (
+                        <>
+                          <div>gmail</div>
+                          <input
+                            name="phoneClient"
+                            value={formData.mailClient}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                mailClient: e.target.value,
+                              })
+                            }
+                          />
+                        </>
+                      ) : null}
+                    </div>
+                  </form>
+                </>
+              ) : (
+                <div>
+                  <h2>guardar la reserva?</h2>
+                  <button onClick={saveEdictReservation}>Si</button>
+                  <button onClick={closeFormReservation}>No</button>
                 </div>
-              </form>
+              )
             ) : (
               <>
                 <h2>{item.personalInformation.nameClient}</h2>
@@ -82,6 +162,22 @@ const Reservation = ({
                   <div>{item.placeAndPeople.people}</div>
                   <div>{item.placeAndPeople.place}</div>
                   <div>{item.personalInformation.mailClient}</div>
+                </div>
+                <div className="edit-reservation">
+                  <button>
+                    <BiUserCheck />
+                  </button>
+                  <button onClick={() => openEditReservation(index, item)}>
+                    <BiUserPlus />
+                  </button>
+
+                  <button
+                    onClick={() =>
+                      deletedAdminReservations(index, item.placeAndPeople.time)
+                    }
+                  >
+                    <BiUserMinus />
+                  </button>
                 </div>
               </>
             )}
