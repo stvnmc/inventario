@@ -9,13 +9,10 @@ const Reservation = ({
   calendarStateId,
   deletedAdminReservations,
 }) => {
-  const editReservation = (index, item) => {
-    console.log(index, item);
-  };
-
   const [showEditform, setShowEditform] = useState(true);
   const [confirmSaveReservation, setConfirmSaveReservation] = useState(true);
   const [indexShow, setindexShow] = useState(null);
+  const [indexSave, setIndexSave] = useState(null);
   const [formData, setFormData] = useState({
     nameClient: "",
     phoneClient: "",
@@ -28,13 +25,18 @@ const Reservation = ({
   const openEditReservation = async (index, item) => {
     if (null !== indexShow)
       if (index !== indexShow) {
-        console.log("no enrra");
         closeFormReservation();
+        // chanceIndex(index, item);
         return;
       }
+    chanceIndex(index, item);
+    setConfirmSaveReservation(true);
+  };
 
-    console.log(index);
-    console.log(indexShow);
+  const chanceIndex = (index, item) => {
+    setIndexSave(index);
+
+    console.log("kdsjs");
 
     setFormData({
       nameClient: item.personalInformation.nameClient || "",
@@ -51,8 +53,9 @@ const Reservation = ({
   //
 
   const closeFormReservation = async () => {
-    setindexShow(null);
+    // setindexShow(null);
     setConfirmSaveReservation(false);
+    console.log("entro");
   };
 
   const saveEdictReservation = () => {
@@ -70,7 +73,7 @@ const Reservation = ({
         reservations[calendarStateId] &&
         Object.values(reservations[calendarStateId][0]).map((item, index) => (
           <div className="reservation" key={index}>
-            {showEditform && index === indexShow ? (
+            {indexShow && index === indexSave ? (
               confirmSaveReservation ? (
                 <>
                   <div className="edit-reservation">
